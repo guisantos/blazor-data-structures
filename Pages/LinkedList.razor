@@ -1,0 +1,72 @@
+﻿@page "/linkedlist"
+
+@using VisualDataStructure.Shared.Components
+@using VisualDataStructure.Data
+@inject LinkedListService LinkedListService
+
+<h3>Linked List</h3>
+
+<button class="btn btn-primary" @onclick="AddFirst">Add First</button>
+
+<button class="btn btn-primary" @onclick="AddLast">Add Last</button>
+
+<button class="btn btn-warning" @onclick="RemoveFirst">Remove First</button>
+
+<button class="btn btn-warning" @onclick="RemoveLast">Remove Last</button>
+
+<button class="btn btn-danger" @onclick="Clear">Clear List</button>
+
+<div class="container linkedList" style="margin-top: 20px">
+    @while (List.MoveNext())
+    {
+        <Node Value="@List.Current" />
+        <svg class="svgLine" height="20" width="200">
+            <line x1="100" y1="0" x2="100" y2="20" style="stroke:rgb(0, 153, 255);stroke-width:5" />
+        </svg>
+    }
+</div>
+
+
+@code {
+    private IEnumerator<int> List { get; set; }
+
+    private void AddFirst()
+    {
+        LinkedListService.AddFirst(new Random().Next(100));
+        UpdateList();
+    }
+
+    private void AddLast()
+    {
+        LinkedListService.AddLast(new Random().Next(100));
+        UpdateList();
+    }
+
+    private void RemoveFirst()
+    {
+        LinkedListService.RemoveFirst();
+        UpdateList();
+    }
+
+    private void RemoveLast()
+    {
+        LinkedListService.RemoveLast();
+        UpdateList();
+    }
+
+    private void Clear()
+    {
+        LinkedListService.Clear();
+        UpdateList();
+    }
+
+    private void UpdateList()
+    {
+        List = LinkedListService.GetEnumerator();
+    }
+
+    protected override void OnInitialized()
+    {
+        UpdateList();
+    }
+}
