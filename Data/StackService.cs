@@ -6,88 +6,26 @@ using System.Threading.Tasks;
 
 namespace VisualDataStructure.Data
 {
-    public class LinkedListService : ICollection<int>
+    public class StackService : ICollection<int>
     {
         public LinkedListNode Head { get; set; }
-        public LinkedListNode Tail { get; set; }
 
-        public void AddFirst(int value)
-        {
-            LinkedListNode temp = Head;
-
-            Head = new LinkedListNode(value)
-            {
-                Next = temp
-            };
-
-            if (Count == 0)
-            {
-                Tail = Head;
-            }
-
-            Count++;
-        }
-
-        public void AddLast(int value)
+        public bool Remove()
         {
             if (Count == 0)
             {
-                AddFirst(value);
-                return;
+                return false;
             }
 
-            LinkedListNode current = Head;
-
-            while (current != Tail)
-            {
-                current = current.Next;
-            }
-
-            current.Next = new LinkedListNode(value);
-            Tail = current.Next;
-
-            Count++;
-        }
-
-        public void RemoveFirst()
-        {
-            if (Count == 0)
-            {
-                return;
-            }
-            else if (Count == 1)
+            if (Count == 1)
             {
                 Clear();
-                return;
+                return true;
             }
 
             Head = Head.Next;
             Count--;
-        }
-
-        public void RemoveLast()
-        {
-            if (Count == 0)
-            {
-                return;
-            }
-            else if (Count == 1)
-            {
-                Clear();
-                return;
-            }
-
-            LinkedListNode current = Head;
-
-            while (current.Next != Tail)
-            {
-                current = current.Next;
-            }
-
-            current.Next = null;
-            Tail = current;
-
-            Count--;
+            return true;
         }
 
         public IEnumerator<LinkedListNode> GetList()
@@ -114,13 +52,19 @@ namespace VisualDataStructure.Data
 
         public void Add(int item)
         {
-            AddFirst(item);
+            LinkedListNode temp = Head;
+
+            Head = new LinkedListNode(item)
+            {
+                Next = temp
+            };
+
+            Count++;
         }
 
         public void Clear()
         {
             Head = null;
-            Tail = null;
             Count = 0;
         }
 
@@ -156,13 +100,14 @@ namespace VisualDataStructure.Data
 
         public bool Remove(int item)
         {
-            throw new NotImplementedException();
+            return Remove();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable<int>)this).GetEnumerator();
         }
+
         #endregion
     }
 }
