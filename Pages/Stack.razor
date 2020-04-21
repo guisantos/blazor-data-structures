@@ -1,0 +1,59 @@
+﻿@page "/stack"
+
+@using VisualDataStructure.Shared.Components
+@using VisualDataStructure.Data
+@inject StackService StackService
+
+<h3>Stack</h3>
+
+<button class="btn btn-primary" @onclick="Push">Push</button>
+
+<button class="btn btn-warning" @onclick="Pop">Pop</button>
+
+<button class="btn btn-danger" @onclick="Clear">Clear</button>
+
+<div class="container" style="margin-top: 20px">
+    @while (List.MoveNext())
+    {
+        if (List.Current == StackService.Head.Value)
+        {
+            <Node Value="@List.Current" Color="lightsteelblue" />
+        }
+        else
+        {
+            <Node Value="@List.Current" />
+        }
+    }
+</div>
+
+@code {
+    private IEnumerator<int> List { get; set; }
+
+    private void Push()
+    {
+        StackService.Add(new Random().Next(100));
+        UpdateList();
+    }
+
+    private void Pop()
+    {
+        StackService.Remove();
+        UpdateList();
+    }
+
+    private void Clear()
+    {
+        StackService.Clear();
+        UpdateList();
+    }
+
+    private void UpdateList()
+    {
+        List = StackService.GetEnumerator();
+    }
+
+    protected override void OnInitialized()
+    {
+        UpdateList();
+    }
+}

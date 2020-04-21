@@ -1,4 +1,4 @@
-﻿<div class="card" style="width: 200px; background: aliceblue;">
+﻿<div class="card" style="width: 200px; background: @Color;">
     <div class="card-body">
         <p class="card-text" style="font-size: 35px;
         color: cornflowerblue; font-weight: 600; text-align:center">@Value</p>
@@ -8,4 +8,7 @@
 @code {
     [Parameter]
     public int Value { get; set; }
+
+    [Parameter]
+    public string Color { get; set; } = "aliceblue";
 }
