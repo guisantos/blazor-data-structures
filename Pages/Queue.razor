@@ -1,0 +1,58 @@
+﻿@page "/queue"
+
+@inject QueueService QueueService
+
+<h3>Queue <span class="badge badge-info">@QueueService.Count</span></h3>
+
+
+<button class="btn btn-primary" @onclick="Enqueue">Enqueue</button>
+
+<button class="btn btn-warning" @onclick="Dequeue">Dequeue</button>
+
+<button class="btn btn-danger" @onclick="Clear">Clear</button>
+
+<div style="margin-top: 20px">
+    @while (List.MoveNext())
+    {
+        if (List.Current == QueueService.Head)
+        {
+            <Node Value="@List.Current.Value" Color="lightsteelblue" />
+        }
+        else
+        {
+            <Node Value="@List.Current.Value" />
+        }
+    }
+</div>
+
+@code {
+    public IEnumerator<LinkedListNode> List { get; set; }
+
+    public void Enqueue()
+    {
+        QueueService.Enqueue(new Random().Next(100));
+        UpdateList();
+    }
+
+    public void Dequeue()
+    {
+        QueueService.Dequeue();
+        UpdateList();
+    }
+
+    public void Clear()
+    {
+        QueueService.Clear();
+        UpdateList();
+    }
+
+    private void UpdateList()
+    {
+        List = QueueService.GetEnumerator();
+    }
+
+    protected override void OnInitialized()
+    {
+        UpdateList();
+    }
+} 

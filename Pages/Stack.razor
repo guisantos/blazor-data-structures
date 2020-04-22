@@ -1,10 +1,8 @@
 ﻿@page "/stack"
 
-@using VisualDataStructure.Shared.Components
-@using VisualDataStructure.Data
 @inject StackService StackService
 
-<h3>Stack</h3>
+<h3>Stack <span class="badge badge-info">@StackService.Count</span></h3>
 
 <button class="btn btn-primary" @onclick="Push">Push</button>
 
@@ -12,22 +10,23 @@
 
 <button class="btn btn-danger" @onclick="Clear">Clear</button>
 
-<div class="container" style="margin-top: 20px">
+<div style="margin-top: 20px">
+
     @while (List.MoveNext())
     {
-        if (List.Current == StackService.Head.Value)
+        if (List.Current == StackService.Head)
         {
-            <Node Value="@List.Current" Color="lightsteelblue" />
+            <Node Value="@List.Current.Value" Color="lightsteelblue" />
         }
         else
         {
-            <Node Value="@List.Current" />
+            <Node Value="@List.Current.Value" />
         }
     }
 </div>
 
 @code {
-    private IEnumerator<int> List { get; set; }
+    private IEnumerator<LinkedListNode> List { get; set; }
 
     private void Push()
     {

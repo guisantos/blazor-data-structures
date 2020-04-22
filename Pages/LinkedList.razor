@@ -1,10 +1,9 @@
 ﻿@page "/linkedlist"
 
-@using VisualDataStructure.Shared.Components
-@using VisualDataStructure.Data
 @inject LinkedListService LinkedListService
+@inject IToastService toastService
 
-<h3>Linked List</h3>
+<h3>Linked List <span class="badge badge-info">@LinkedListService.Count</span></h3>
 
 <button class="btn btn-primary" @onclick="AddFirst">Add First</button>
 
@@ -16,10 +15,11 @@
 
 <button class="btn btn-danger" @onclick="Clear">Clear List</button>
 
-<div class="container linkedList" style="margin-top: 20px">
+<div style="margin-top: 20px">
     @while (List.MoveNext())
     {
         <Node Value="@List.Current.Value" />
+
         if (List.Current != LinkedListService.Tail)
         {
             <Line />
@@ -34,36 +34,52 @@
     private void AddFirst()
     {
         LinkedListService.AddFirst(new Random().Next(100));
+
+        toastService.ShowToast(ToastLevel.Info, "Added number " + LinkedListService.Head.Value + " on the first position.");
+
         UpdateList();
     }
 
     private void AddLast()
     {
         LinkedListService.AddLast(new Random().Next(100));
+
+        toastService.ShowToast(ToastLevel.Info, "Added number " + LinkedListService.Tail.Value + " on the last position.");
+
         UpdateList();
     }
 
     private void RemoveFirst()
     {
-        LinkedListService.RemoveFirst();
-        UpdateList();
+        if (LinkedListService.Count != 0)
+        {
+            toastService.ShowWarning("Removed number " + LinkedListService.RemoveFirst() + " from the first position.", "Info");
+            UpdateList();
+        }
     }
 
     private void RemoveLast()
     {
-        LinkedListService.RemoveLast();
-        UpdateList();
+        if (LinkedListService.Count != 0)
+        {
+            toastService.ShowWarning("Removed number " + LinkedListService.RemoveLast() + " from the last position.", "Info");
+            UpdateList();
+        }
     }
 
     private void Clear()
     {
-        LinkedListService.Clear();
-        UpdateList();
+        if (LinkedListService.Count != 0)
+        {
+            LinkedListService.Clear();
+            toastService.ShowError("Linked list cleared", "Info");
+            UpdateList();
+        }
     }
 
     private void UpdateList()
     {
-        List = LinkedListService.GetList();
+        List = LinkedListService.GetEnumerator();
     }
 
     protected override void OnInitialized()

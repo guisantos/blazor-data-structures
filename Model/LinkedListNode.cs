@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace VisualDataStructure.Data
+namespace VisualDataStructure.Model
 {
     public class LinkedListNode
     {

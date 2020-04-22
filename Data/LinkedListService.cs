@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using VisualDataStructure.Model;
 
 namespace VisualDataStructure.Data
 {
-    public class LinkedListService : ICollection<int>
+    public class LinkedListService
     {
         public LinkedListNode Head { get; set; }
         public LinkedListNode Tail { get; set; }
+        public int Count { get; private set; }
 
         public void AddFirst(int value)
         {
@@ -49,32 +52,39 @@ namespace VisualDataStructure.Data
             Count++;
         }
 
-        public void RemoveFirst()
+        public int? RemoveFirst()
         {
             if (Count == 0)
             {
-                return;
+                return null;
             }
-            else if (Count == 1)
-            {
-                Clear();
-                return;
-            }
+
+            int currentHeadValue = Head.Value;
 
             Head = Head.Next;
             Count--;
+
+            if(Count == 0)
+            {
+                Clear();
+            }
+
+            return currentHeadValue;
         }
 
-        public void RemoveLast()
+        public int? RemoveLast()
         {
             if (Count == 0)
             {
-                return;
+                return null;
             }
-            else if (Count == 1)
+
+            int currentTailValue = Tail.Value;
+
+            if (Count == 1)
             {
                 Clear();
-                return;
+                return currentTailValue;
             }
 
             LinkedListNode current = Head;
@@ -88,9 +98,11 @@ namespace VisualDataStructure.Data
             Tail = current;
 
             Count--;
+
+            return currentTailValue;
         }
 
-        public IEnumerator<LinkedListNode> GetList()
+        public IEnumerator<LinkedListNode> GetEnumerator()
         {
             LinkedListNode current = Head;
             while (current != null)
@@ -100,69 +112,11 @@ namespace VisualDataStructure.Data
             }
         }
 
-        #region ICollection
-
-        public int Count { get; private set; }
-
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public void Add(int item)
-        {
-            AddFirst(item);
-        }
-
         public void Clear()
         {
             Head = null;
             Tail = null;
             Count = 0;
         }
-
-        public bool Contains(int item)
-        {
-            LinkedListNode current = Head;
-            while (current != null)
-            {
-                if (current.Value == item)
-                {
-                    return true;
-                }
-                current = current.Next;
-            }
-
-            return false;
-        }
-
-        public void CopyTo(int[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerator<int> GetEnumerator()
-        {
-            LinkedListNode current = Head;
-            while (current != null)
-            {
-                yield return current.Value;
-                current = current.Next;
-            }
-        }
-
-        public bool Remove(int item)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<int>)this).GetEnumerator();
-        }
-        #endregion
     }
 }
