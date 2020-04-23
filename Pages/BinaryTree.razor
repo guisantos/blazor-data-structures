@@ -1,50 +1,48 @@
 ﻿@page "/binarytree"
 
-<h3>BinaryTree</h3>
+@inject BinaryTreeService BinaryTreeService
+
+<h3>BinaryTree <span class="badge badge-info">@BinaryTreeService.Count</span></h3>
+
+<div class="row">
+   <div class="col-xs-4">
+        <div class="input-group input-group">
+            <div class="input-group-prepend">
+                <button @onclick="Add" class="btn btn-primary" type="button">Add</button>
+            </div>
+            <input @bind="Value" type="text" class="form-control" placeholder="0" aria-label="" aria-describedby="basic-addon1">
+        </div>
+    </div>
+</div>
 
 <div class="tree">
     <ul>
         <li>
-            <a href="#">1</a>
-            <ul>
-                <li>
-                    <a href="#">2</a>
-                    <ul>
-                        <li>
-                            <a href="#">2.1</a>
-
-                        </li>
-                        <li>
-                            <a href="#">2.2</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">3</a>
-                    <ul>
-                        <ul>
-                            <li>
-                                <a href="#">3.1</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">3.1.1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">3.1.2</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">3.2</a>
-                            </li>
-                        </ul>
-                    </ul>
-                </li>
-            </ul>
+            @Fragment
         </li>
     </ul>
 </div>
 
 @code {
     //https://codepen.io/anggaand123/pen/wexprZ
+
+    public string Value { get; set; }
+    public RenderFragment Fragment { get; set; }
+
+    public void Add()
+    {
+        BinaryTreeService.Add(Value != null ? Convert.ToInt32(Value) : new Random().Next(100));
+        UpdateTree();
+        Value = null;
+    }
+
+    public void UpdateTree()
+    {
+        Fragment = BinaryTreeService.GetSomeRawHtml();
+    }
+
+    protected override void OnInitialized()
+    {
+        UpdateTree();
+    }
 }

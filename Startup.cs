@@ -23,9 +23,11 @@ namespace VisualDataStructure
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
             services.AddSingleton<LinkedListService>();
             services.AddSingleton<StackService>();
-            services.AddSingleton<QueueService>();
+            services.AddSingleton<QueueService>(); 
+            services.AddSingleton<BinaryTreeService>();
 
             services.AddBlazoredToast();
         }
