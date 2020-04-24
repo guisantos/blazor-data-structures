@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using VisualDataStructure.Model;
 
 namespace VisualDataStructure.Data
@@ -60,37 +58,170 @@ namespace VisualDataStructure.Data
             }
         }
 
-        public RenderFragment GetSomeRawHtml()
+        public bool Contains(int value)
+        {
+            BinaryTreeNode parent;
+            return FindWithParents(value, out parent) != null;
+        }
+
+        public BinaryTreeNode FindWithParents(int value, out BinaryTreeNode parent)
+        {
+            BinaryTreeNode current = Root;
+            parent = null;
+
+            while (current != null)
+            {
+                int result = current.CompareTo(value);
+
+                if (result > 0)
+                {
+                    parent = current;
+                    current = current.Left;
+                }
+                else if (result < 0)
+                {
+                    parent = current;
+                    current = current.Right;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return current;
+        }
+
+        public bool Remove(int value)
+        {
+            BinaryTreeNode current, parent;
+
+            current = FindWithParents(value, out parent);
+
+            if (current == null)
+            {
+                return false;
+            }
+
+            Count--;
+
+            //removed has no right child
+            if (current.Right == null)
+            {
+                if (parent == null)
+                {
+                    Root = current.Left;
+                    Root.Father = null;
+                }
+                else
+                {
+                    int result = parent.CompareTo(current.Value);
+                    if (result > 0)
+                    {
+                        parent.Left = current.Left;
+                        if (parent.Left != null)
+                        {
+                            parent.Left.Father = current.Father;
+                        }
+                    }
+                    else if (result < 0)
+                    {
+                        parent.Right = current.Left;
+                        if (parent.Right != null)
+                        {
+                            parent.Right.Father = current.Father;
+                        }
+                    }
+                }
+            }
+            //removed has no left child then right child replace it
+            else if (current.Right.Left == null)
+            {
+                current.Right.Left = current.Left;
+
+                if (current.Right.Left != null)
+                {
+                    current.Right.Left.Father = current.Right;
+                }
+
+                if (parent == null)
+                {
+                    Root = current.Right;
+                    Root.Father = null;
+                }
+                else
+                {
+                    int result = parent.CompareTo(current.Value);
+                    if (result > 0)
+                    {
+                        parent.Left = current.Right;
+                        if (parent.Left != null)
+                        {
+                            parent.Left.Father = current.Father;
+                        }
+                    }
+                    else if (result < 0)
+                    {
+                        parent.Right = current.Right;
+                        if (parent.Right != null)
+                        {
+                            parent.Right.Father = current.Father;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                BinaryTreeNode leftMost = current.Right.Left;
+                BinaryTreeNode leftMostParent = current.Right;
+
+                while (leftMost.Left != null)
+                {
+                    leftMostParent = leftMost;
+                    leftMost = leftMost.Left;
+                }
+
+                leftMostParent.Left = leftMost.Right;
+
+                leftMost.Left = current.Left;
+                leftMost.Right = current.Right;
+
+                if (parent == null)
+                {
+                    Root = leftMost;
+                    Root.Father = null;
+                }
+                else
+                {
+                    int result = parent.CompareTo(current.Value);
+                    if (result > 0)
+                    {
+                        parent.Left = leftMost;
+                        if (parent.Left != null)
+                        {
+                            parent.Left.Father = leftMost.Father;
+                        }
+                    }
+                    else if (result < 0)
+                    {
+                        parent.Right = leftMost;
+                        if (parent.Right != null)
+                        {
+                            parent.Right.Father = leftMost.Father;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public RenderFragment GetTreeView()
         {
             return builder =>
             {
                 PreOrderTraversal(builder, Root);
             };
-
-            //{
-            //    builder.OpenElement(0, "ul");
-            //        builder.OpenElement(1, "li");
-            //            builder.OpenElement(2, "a");
-            //            builder.AddAttribute(2, "href", "#");
-            //            builder.AddContent(2, 1);
-            //            builder.CloseElement();
-            //            builder.OpenElement(3, "ul");
-            //                builder.OpenElement(4, "li");
-            //                    builder.OpenElement(5, "a");
-            //                    builder.AddAttribute(6, "href", "#");
-            //                    builder.AddContent(6, 2);
-            //                    builder.CloseElement();
-            //                builder.CloseElement();
-            //                builder.OpenElement(7, "li");
-            //                    builder.OpenElement(8, "a");
-            //                    builder.AddAttribute(9, "href", "#");
-            //                    builder.AddContent(9, 3);
-            //                    builder.CloseElement();
-            //                builder.CloseElement();
-            //            builder.CloseElement();
-            //        builder.CloseElement();
-            //    builder.CloseElement();
-            //};
         }
 
         public void PreOrderTraversal(RenderTreeBuilder builder, BinaryTreeNode node)
@@ -111,9 +242,11 @@ namespace VisualDataStructure.Data
                     builder.OpenElement(1, "li");
                 }
 
-                builder.OpenElement(2, "a");
-                builder.AddAttribute(2, "href", "#");
-                builder.AddContent(2, node.Value);
+                builder.OpenElement(0, "a");
+                builder.AddAttribute(1, "href", " ");
+                //builder.AddAttribute(2, "onclick", EventCallback.Factory.Create<MouseEventArgs>(this, () => Remove(node.Value)));
+                builder.AddEventPreventDefaultAttribute(3, "onclick", true);
+                builder.AddContent(4, node.Value);
                 builder.CloseElement();
 
                 PreOrderTraversal(builder, node.Left);
