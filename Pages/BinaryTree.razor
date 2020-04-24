@@ -8,20 +8,12 @@
     <div class="p-2">
         <div class="input-group input-group">
             <div class="input-group-prepend">
-                <button @onclick="Add" class="btn btn-primary" type="button">Add</button>
+                <button @onclick="Add" class="btn btn-primary" type="button">Add Leaf</button>
             </div>
             <input @bind="Value" type="text" class="form-control" placeholder="0" aria-label="" aria-describedby="basic-addon1">
-        </div>
-    </div>
-</div>
-
-<div class="d-flex flex-row mb-1">
-    <div class="p-2">
-        <div class="input-group input-group">
-            <div class="input-group-prepend">
+            <div class="input-group-append">
                 <button @onclick="Remove" class="btn btn-warning" type="button">Remove</button>
             </div>
-            <input @bind="ValueToRemove" type="text" class="form-control" placeholder="0" aria-label="" aria-describedby="basic-addon1">
         </div>
     </div>
 </div>
@@ -50,7 +42,7 @@
 
     public void Remove()
     {
-        BinaryTreeService.Remove(Convert.ToInt32(ValueToRemove));
+        BinaryTreeService.Remove(Convert.ToInt32(Value));
         RenderComponent();
         Value = null;
     }
