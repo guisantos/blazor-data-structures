@@ -28,6 +28,7 @@ namespace VisualDataStructure
             services.AddSingleton<StackService>();
             services.AddSingleton<QueueService>(); 
             services.AddSingleton<BinaryTreeService>();
+            services.AddSingleton<HashTableService>();
 
             services.AddBlazoredToast();
         }
