@@ -1,0 +1,21 @@
+﻿<tr>
+    <th scope="row"><a href=" " @onclick:preventDefault @onclick="@Remove"> <span class="oi oi-trash"></span></a></th>
+    <td>@Key</td>
+    <td>@Value</td>
+</tr>
+
+@code {
+    [Parameter]
+    public string Key { get; set; }
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public Action<string> RemoveMethod { get; set; }
+
+    void Remove()
+    {
+        RemoveMethod(Value);
+    }
+}

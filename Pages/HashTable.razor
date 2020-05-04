@@ -1,0 +1,56 @@
+﻿@page "/hashtable"
+
+@inject HashTableService HashTableService
+
+@using System.Collections;
+
+<h3>Hash Table <span class="badge badge-info">@HashTableService.Hashtable.Count</span></h3>
+
+<div class="d-flex flex-row mb-1">
+    <div class="p-2">
+        <div class="input-group input-group">
+            <div class="input-group-prepend">
+                <button @onclick="Add" class="btn btn-primary" type="button">Add Value</button>
+            </div>
+            <input @bind="Value" type="text" class="form-control" placeholder="0" aria-label="" aria-describedby="basic-addon1">
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 20px" class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Key</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DictionaryEntry node in HashTableService.Hashtable)
+            {
+                <Hash Key="@node.Key.ToString()" Value="@node.Value.ToString()" RemoveMethod="@Remove"/>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    public string Value { get; set; }
+
+
+    public void Add()
+    {
+        if (Value != null)
+        {
+            HashTableService.Add(Value);
+            Value = null;
+        }
+    }
+
+    public void Remove(string value)
+    {
+        HashTableService.Remove(value);
+        StateHasChanged();
+    }
+}
